@@ -1,0 +1,1803 @@
+
+\input{20160130CTCwTexBeamerChineseUTF8NoTitle}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[]% (optional, use only with long paper titles)
+{{\sf CT 1701:} {\ctxff 試驗期中分析}}
+
+\subtitle{{\large\sf Interim Analysis} \\
+{\large\sf Group Sequential Design}} % (optional)
+
+
+
+\author[林建甫] % (optional, use only with lots of authors)
+    {{\large\ctxff 林 建 甫} \\ }
+% - Use the \inst{?} command only if the authors have different
+%   affiliation.
+
+\institute[NTPU] % (optional, but mostly needed)
+{
+  %\inst{1}%
+  {\ctxff \footnotesize 台北大學 統計系} \\
+  %{\ctxff 台北醫學大學萬芳醫院 骨科} \\
+  %{\ctxff 台北大學 統計系 醫學統計學程 助理教授} \\
+  %{\ctxff 亞洲環宇醫學編譯公司 統計顧問} \\
+  %{\ctxff 智策市場研究公司 統計顧問} \\
+  %{\ctxff 台北市 台安醫院 骨科兼任主治醫師} \\
+  %{\ctxff 台北市 中山醫院 骨科兼任主治醫師} \\
+  %{\ctxff 美國 密西根大學 生物統計博士}
+  %Department of Statistics\\
+  %National Taipei University, Taipei, Taiwan
+  %%\and
+  %%\inst{2}%
+  %%Department of Theoretical Philosophy\\
+  %%University of Elsewhere
+}
+% - Use the \inst command only if there are several affiliations.
+% - Keep it simple, no one is interested in your street address.
+
+
+\date[\myyear] % (optional, should be abbreviation of conference name)
+{{\footnotesize \myyear}}
+% - Either use conference name or its abbreviation.
+% - Not really informative to the audience, more for people (including
+%   yourself) who are reading the slides online
+
+\subject{臨床試驗}
+% This is only inserted into the PDF information catalog. Can be left
+% out.
+
+% If you have a file called "university-logo-filename.xxx", where xxx
+% is a graphic format that can be processed by latex or pdflatex,
+% resp., then you can add a logo as follows:
+
+% \pgfdeclareimage[height=0.5cm]{university-logo}{university-logo-filename}
+% \logo{\pgfuseimage{university-logo}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\ctxff
+
+\begin{fis}{}
+  \titlepage
+\end{fis}
+
+% CT http://www.rctdesign.org/Learning_Courses.html
+% https://ippcr.nihtraining.com/archive.php?year=2015
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{fis}{Fundamental Point}
+\bit
+\item Although many statistical techniques are available \\
+to assist in monitoring, none of them should be used \\
+as the sole basis in the decision to
+stop or continue the trial.
+
+\eit
+
+\end{fis}
+
+
+\begin{ftab}{試驗數據監督與期中分析}
+\bit
+\item Clinical Trials: 投資新藥 = 賭博
+\item A Clinical Trial: 2000-2005
+\item Fixed Sample Size.
+\item 試驗期中則多看幾次 (光明正大的偷看)!
+\item 2001Jan, 2001Jul, 2002Jan, 2002Jul, ....
+% CP  (Conditional Power)
+
+\pagebreak
+\item  數據監督與期中分析 = 根據現有數據, 判定最後新藥有效的可能性
+\bit
+\item 很高: 早點停? 但還沒有到最後結果?
+\item 不是很高: 但多加點受試者就有希望, 將賭注作大?
+\item 很低: 早點停? 能省就省!
+\item 新藥有害:早點停! 不然惹上官司,  只能吃公家飯!
+\eit
+\item 提早停認輸, OK!
+\item 提早停說贏, 就沒那麼簡單!
+
+\eit
+
+\end{ftab}
+
+
+
+
+\begin{fis}{試驗期中多看幾次, 有什麼不好?}
+
+\end{fis}
+
+
+
+\begin{ftab}{試驗期中多看幾次, 有什麼不好?}
+\bit
+\item 多看多錯? 會!
+\item 多看多對? 會!
+\item Why? (吵過架的人都知道)
+\bit
+\item 吵前架的前提不同 (有效 vs. 有害).
+\item 看的人立場不同 (法規單位 vs. 藥廠).
+\item 有時還會看到不該看到的事情!
+\eit
+
+\eit
+
+\pagebreak
+\bit
+\item 前提 A: 新藥無效:
+\bit
+\item 會多看多錯, 認為新藥有效.
+\eit
+
+\item 前提 B: 新藥有效:
+\bit
+\item 會多看多對, 認為新藥有效.
+\eit
+
+\eit
+
+\pagebreak
+\bit
+\item 看的人立場不同:
+\bit
+\item 法規單位: 多看幾次, 瞎貓都會抓到死老鼠!
+\item 藥廠: 多看幾次, 才會真像大白!
+\eit
+
+\eit
+
+\end{ftab}
+
+
+\begin{fis}{Clinical Trials: 投資新藥 = 賭博}
+事實上:
+\bit
+\item 新藥無效 $\Rightarrow$ 犯錯率 ($\alpha$)
+\item 新藥有效 $\Rightarrow$ 成功率 (1-$\beta$)
+
+\eit
+
+\end{fis}
+
+
+
+\begin{fis}{Clinical Trials: 投資新藥 = 賭博}
+\bit
+\item 多看多錯:
+\bit
+\item Phase III, 必須嚴格控制犯錯率 ($\alpha$)
+\item Phase I, II 只要錯的不離譜就行!
+\eit
+多看多對:
+\bit
+\item Phase I, II, 何樂而不為!
+\eit
+
+\eit
+
+\end{fis}
+
+
+
+\begin{fis}{Clinical Trials: 投資新藥 = 賭博}
+\bit
+\item 誰負責期中多看幾次?
+\bit
+\item DSMB (Data Safety \& Monitoring Board)
+\item DMC (Data Monitoring Committee)
+\eit
+\item 如何進行 Interim Analysis?
+
+\eit
+
+\end{fis}
+
+
+%%%%%%%%%%%%%%%%%%%%%%
+\section[Introduction to Interim Analyses]{Introduction to Interim Analyses}
+
+
+\begin{fis}{Statistical Aspects of Interim Monitoring}
+\bit
+\item Assurance of ongoing patients safety.
+\item Requires regular review of accumulating data.
+\item Repeated statistical comparisons of outcomes.
+\item Increases false positive rate for multiple testings.
+\item Gradual recognition 1960-1970.
+
+\eit
+
+\end{fis}
+
+
+
+\begin{fis}{Introduction to Interim Analyses}
+\bit
+\item Specialized statistical methods are needed.
+\item Several statistical approaches have been developed.
+\item Flexibility can be built into the statistical monitoring plan.
+\item DSMB's must be in agreement with trial sponsors \\
+regarding the statistical and other criteria.
+\eit
+
+\end{fis}
+
+
+
+\begin{fis}{Interim Monitoring}
+\bit
+\item Compare the treatments multiple times.
+\item Each comparison has a Type I error rate of .05.
+\item The chances of finding a false significant difference increase.
+\eit
+
+\end{fis}
+
+
+
+\begin{ftab}{}
+
+   \includegraphics[height=0.8\textheight, width=0.9\textwidth]{X:/xtemp/CT_GDP01}
+
+\pagebreak
+    \includegraphics[height=0.8\textheight, width=0.9\textwidth]{X:/xtemp/CT_GDP02}
+
+
+
+\end{ftab}
+
+
+
+\begin{fitem}{多重比較 與 Overall Type I Error}
+\bit
+\item $G$ 次多重比較.
+\item $G$ 個 $H_0$, $H_{01}, H_{02}, \ldots, H_{0G}$.
+\item 控制每個 $H_{0j}$ Type I Error $\alpha=0.05$.
+\item 若所有 $G$ 個虛無假說 $H_0$ 為真, \\
+則 $G$ 次 檢定都沒有拒絕 $H_0$ 的機率:
+\bee
+P(\text{$G$ 次 檢定都沒有拒絕 $H_0$})
+= (1-\alpha)^G.
+\eee
+
+\pagebreak
+\item 至少 1 次拒絕 $H_0$ 的機率:
+\bee
+\text{整體 Type I Error} &=& P(\text{至少 1 次拒絕 $H_0$}) \\
+&=& 1 - P(\text{$G$ 次 檢定都沒有拒絕 $H_0$}) \\
+&=& 1 - (1-\alpha)^G.
+\eee
+\eit
+
+\pagebreak
+\bit
+\item 整體型一誤 (Overall Type I Error Rate)
+\bee
+G & \text{Overall Type I Error Rate}  \\
+1 & 0.0500 = 1-(1-0.05)^1 \nonumber \\
+2 & 0.0975 = 1-(1-0.05)^2 \nonumber \\
+3 & 0.1426 = 1-(1-0.05)^3 \nonumber \\
+4 & 0.1855 = 1-(1-0.05)^4 \nonumber \\
+5 & 0.2262 = 1-(1-0.05)^5 \nonumber \\
+10 & 0.4012 = 1-(1-0.05)^{10} \nonumber \\
+20 & 0.6415 = 1-(1-0.05)^{20} \nonumber
+\eee
+\eit
+
+\pagebreak
+\bit
+\item 多重比較, 整體型一誤增加.
+\item 執行多重 比較/檢定, 需控制整體型一誤.
+
+\eit
+
+\end{fitem}
+
+
+
+
+
+\begin{ftab}{Repeated Significance Tests \\ on Accumulating Data}
+\bit
+\item Interim analysis.
+\item Repeated testing of accumulating data.
+\item Perform tests of significance.
+\item Stop the trial if any $p < .05$.
+\item Simple, but wrong.
+
+\pagebreak
+
+
+\vspace*{0.3cm}
+%\begin{center}
+\begin{footnotesize}
+%\begin{scriptsize}
+\begin{tabular}{cc}
+\toprule
+\mcc{No. of repeated tests}  & \mcc{Overall}                 \\
+\mcc{at the 5 \% level}      & \mcc{Significant level} \\ \hline
+1               &0.05 \\
+2               &0.08 \\
+3               &0.11 \\
+4               &0.13 \\
+5               &0.14 \\
+10              &0.19 \\
+20              &0.25 \\
+50              &0.32 \\
+100             &0.37 \\
+1000            &0.53 \\
+\bottomrule
+\end{tabular}
+%\end{scriptsize}
+\end{footnotesize}
+%\end{center}
+\vspace*{0.3cm}
+
+\eit
+
+\end{ftab}
+
+
+
+\begin{fis}{Repeated Testing for Significance: Solution}
+General solution to multiple testing:
+\bit
+\item Adjust the critical value.
+\item Control the overall significance level.
+\item A trial should not be terminated early \\
+unless the difference is highly significant for beneficial effects.
+
+\eit
+
+\end{fis}
+
+
+
+\begin{fis}{Not All Reasons for Early Termination \\ Affect Type I Error}
+\bit
+\item Efficacy definitively established - yes
+\item Unanticipated serious safety concern - no
+\item Practical difficulties - no
+\bit
+\item low accrual
+\item high dropout
+\eit
+\item No hope of demonstrating efficacy - no
+
+\eit
+
+\end{fis}
+
+
+
+\begin{fis}{Early Termination: ECMO Trial}
+Extra-corporeal membrane oxygenation
+\bit
+\item ECMO versus standard treatment for newborn infants with persistent pulmonary hypertension.
+\item N = 39 infants enrolled in study
+\item Trial terminated after interim analysis
+\item 4/10 deaths in standard therapy arm
+\item 0/9 deaths in ECMO arm
+\item $p = 0.054$ (one-sided)
+\item Questions:
+\bit
+\item Is this result sufficient evidence to change routine practice?
+\item Is the evidence in favor of ECMO very strong?
+\eit
+
+\eit
+{\footnotesize
+(O'Rourke et al., 1989, Pediatrics 84, 957 - 963)
+}
+
+\end{fis}
+
+
+
+\begin{fis}{Early Termination: (ISIS-2) \\ Second International Study of Infract Survival}
+\bit
+\item $2 \times 2$ Factorial design: \\
+aspirin, streptokinase, the combination, placebo
+\item Treatment of suspected acute myocardial infarction
+\item Primary endpoint: 5-week vascular mortality
+\item Highly significant results
+\bit
+\item aspirin vs. placebo: $p < 0.000005$
+\item streptokinase vs. placebo: $p < 0.0.000005$
+\item combination vs. each separate agent: $p < 0.0.0005$
+\eit
+\item Question: should this study have been stopped earlier?
+
+\eit
+{\footnotesize
+(ISIS-2 Collaborative Group, Lancet, 1988)
+}
+
+\end{fis}
+
+
+
+\begin{ftab}{Early Termination: \\ AZT in Asymptomatic HIV Infection}
+\bit
+\item U.S. trial* (AIDS Clinical Trials Group)
+\bit
+\item Stopped early based on observed benefit
+\item Primary endpoint: progression to symptomatic disease or AIDS
+\item Statistical criterion: O'Brien-Fleming boundaries
+\eit
+\item U.K. trial** (Concorde)
+\bit
+\item Continued the trial
+\item Informed patients of U.S. results
+\item Similar primary endpoint
+\item No treatment benefit
+\eit
+
+\pagebreak
+\item Question: Was U.S. trial stopped too early?
+\eit
+\vspace*{0.5cm}
+{\small
+* Volberding et al, New England Journal of Medicine, 1990. \\
+** Concorde Coordinating Committee, Lancet, 1994.
+}
+
+\end{ftab}
+
+
+
+\begin{ftab}{Interim Analyses}
+\bit
+\item Data-Dependent Stopping
+\item Early Stopping
+\item Some issues involved in stopping:
+\bit
+\item ethics
+\item precision of results
+\item data quality
+\item resource availability
+\eit
+
+\pagebreak
+\item We use accumulated data to decide.
+\item Sometimes outside information is provided (US, UK).
+\item Early stopping: efficacy or other reasons.
+
+\eit
+
+\end{ftab}
+
+
+
+\begin{fis}{Statistical Methods in Interim Analysis}
+\bit
+%\item Bonferroni
+\item Classical sequential methods
+\item Group sequential methods
+\bit
+\item Haybittle-Peto (1971, 1976)
+\item Pocock (1977)
+\item O'Brien-Fleming (1979)
+\item Slud and Wei (1982)
+\item Lan and DeMets (alpha spending function, 1983)
+\eit
+
+\item Curtailed Sampling/Conditional Power
+\item Bayesin (Adaptive)
+\item Multi-Stage Adaptive Designs
+
+\eit
+
+\end{fis}
+
+
+\begin{fis}{Statistical Schools of Thought}
+\bit
+\item Likelihood Issues (classical sequential methods)
+\item Bayesian Issues
+
+\item Frequentist Issues:
+ \bit
+ \item Multiple Looks
+ \item Group Sequential Designs
+   \bit
+   \item Stopping Boundaries
+   \item Alpha Spending Functions
+   \eit
+  \eit
+
+\item Multi-Stage Adaptive Designs
+\eit
+
+
+
+\end{fis}
+
+
+
+\begin{fis}{Statistical Methods}
+\bit
+\item All differ in their approach.
+\item Frequentist is most commonly seen, but not necessarily best!
+\item All treat interim analyses quite differently.
+\eit
+
+\end{fis}
+
+
+
+\begin{ftab}{Opposing Pressures in Interim Analyses}
+(A) To Terminate:
+\bit
+\item Minimize size of trial.
+\item Minimize number of patients on inferior arm.
+\item Costs and economics.
+\item Timeliness of results.
+\eit
+
+\pagebreak
+(B) To Continue:
+\bit
+\item Increase precision.
+\item Reduce errors.
+\item Increase power.
+\item Increase ability to look at subgroups.
+\item Gather information on secondary endpoints.
+
+
+\eit
+
+\end{ftab}
+
+
+\begin{fis}{Disadvantages of Stopping Early}
+\bit
+\item Lack of credibility: small trials not convincing
+\item Bias/Mistake: stop on random high, risk of false positive
+\item Pressure: unduly enthusiastic/extrapolated recommendation.
+\item Long term outcome not well known.
+
+\eit
+
+\end{fis}
+
+
+\begin{fis}{Regulatory Concerns}
+\bit
+\item Early stopping (for efficacy) only for serious outcomes.
+\item Utilization of well-defined sequential designs.
+\item Documented details in study protocol.
+\item Restrict to an IDMC.
+
+\eit
+
+\end{fis}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%
+\section[Classical Sequential Methods]{Classical Sequential Methods}
+
+
+\begin{fis}{Classical Sequential Methods}
+
+
+\end{fis}
+
+
+\begin{ftab}{Wald (Open) Classical Sequential Methods}
+\bit
+\item Fully Sequential Trial.
+\item Originally developed by Wald.
+\item Minimize the number of participants.
+\item Open plan: without pre-specified sample size or time frame.
+\item Requires paired subjects, one observation from each group.
+\item Evaluate the result after each outcome is observed.
+\item Assume that the outcome is known in a short time.
+\item Many trials involving acute illness.
+\item Make decision to continue or stop \\
+depends on results from those already entered.
+\item Only decide a trial to be continued or terminated.
+\eit
+
+\pagebreak
+Disadvantages:
+\bit
+\item Paired subjects may not be well matched.
+\item Cumbersome to monitor the study outcome frequently.
+\item Open plan makes the planning difficult.
+\item The classical sequential approach has not been widely used.
+\item It is neither feasible nor necessary for ethical reasons \\
+to perform an analysis after every pair of outcomes.
+\eit
+
+
+\pagebreak
+Armitage (1957) introduced closed sequential design.
+\bit
+\item Set maximum limit for subjects ($2 n$).
+\item Acute leukemia trial\\
+comparing 6-mercaptopurine with placebo (CALGB).
+\bit
+\item Terminated early.
+\item The statistic crossed the sequential boundary for benefit \\
+after 21 pairs.
+\eit
+
+\eit
+
+\end{ftab}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%
+\section[Group Sequential Methods]{Group Sequential Methods}
+
+
+
+\begin{fis}{Group Sequential Methods}
+
+\end{fis}
+
+
+
+\begin{fis}{Group Sequential Methods: Basic Ideas}
+\bit
+\item Analyses performed at pre-specified intervals.
+\item Compute summary statistic at each interim	analyses.
+\item Each analysis is based on additional new subjects (events).
+\item Control the overall type I error at $\alpha = 0.05$.
+\item P-values for early termination varies with time.
+\item Compare statistic to a conservative critical value.
+
+\eit
+
+\end{fis}
+
+
+
+
+
+\begin{ftab}{Group Sequential Methods: Basic Example}
+\bit
+\item Suppose the endpoint is a binary outcome.
+\item Total $K$ times analysis (interim + final analysis).
+\item Accumulate up to $K$ groups of subjects.
+\item Each group consists of $n$ subjects enrolled in each of two arms.
+\item After each group is enrolled and calculate the $Z$ statistic.
+\item Compare $Z$ to pre-specified boundaries.
+
+\pagebreak
+\item Formalize stopping rules and keep error rates low.
+\item Heuristically, we set up a statistical boundary.
+\item We stop if it is crossed.
+\eit
+
+\pagebreak
+Example 1:
+\bit
+\item Do two interim analyses + final analysis, $K=3$.
+\item Only stop if $p < 0.01$ at $K=1, 2$.
+\item At the end $K=3$, use nominal 0.05 type I error rate.
+\item Total type I error rate = 0.07.
+\eit
+
+Example 2:
+\bit
+\item Do 5 interim analyses at 0.002 level + final $K=1, 2, 3, 4,5$.
+\item Do final analysis at 0.04 ($K=5$).
+\item Total type 1 error rate = 0.05.
+\eit
+
+
+\end{ftab}
+
+
+
+\begin{ftab}{}
+
+    \includegraphics[height=0.8\textheight, width=0.9\textwidth]{X:/xtemp/CT_GDP02}
+
+\end{ftab}
+
+
+
+\begin{fis}{Group Sequential Methods: General Approach}
+\bit
+\item Traditionally, use fixed sample approach.
+\item Compute sample size as if a single look.
+\item Specify number of interim analyses.
+\item Specify stopping boundary at each analysis.
+\item Inflate sample size to preserve assumed power. \\
+(not always done as adjustment is minor).
+\item Compute the standardized statistic $Z_k$ at each analysis.
+\item compare $Z_k$s with critical values (monitoring boundary).
+\item At the early termination, determine p-values  and CI.
+\eit
+
+\end{fis}
+
+
+
+\begin{ftab}{Group Sequential Methods: Applied Theory}
+\bit
+\item $H_0: \mu_A - \mu_B = 0$, $H_A: \mu_A - \mu_B = \delta$.
+\item Total $K$ analysis = $(K-1)$ interim + 1 final analysis.
+\item Analysis time point: $j = 1, 2, \ldots, K$.
+\item Accumulate additional $2n$ patients at each $j$ time point.
+\item Group $A$ and $B$.
+\item $X$: outcome variable, equal $\var(X)=\vas$.
+\item Sample mean at $j$th analysis:
+$\overline{X}_{Aj}$, $\overline{X}_{Bj}$.
+
+\pagebreak
+\item Notation:
+\bee
+\delta^\star &=& \delta/\sqrt{(2\vas/n)} \\
+Y_j &=& \frac{(\overline{X}_{Aj}-\overline{X}_{Bj})}{\sqrt{2\vas/n}} \sim \dis{N}(\delta^\star, 1). \\
+S_k &=& \sum_{j=1}^{k} Y_i \sim \dis{N}(k \times \delta^\star, k) \\
+\eee
+
+\pagebreak
+\item Standardized test statistic
+\bee
+Z_k = \frac{\sum_{k=1}^{k} \Big( \overline{X}_{Aj}-\overline{X}_{Bj}\Big)}{\sqrt{k(2\vas/n)}}
+= \frac{S_k}{\sqrt{k}} \sim \dis{N}(\sqrt{k} \delta^\star, 1).
+\eee
+\item We specify boundaries, $B_{Uk}$ and $B_{Lk}$,
+for each interim analysis.
+
+\item Decide to stop or continue up to $K$ looks.
+
+\pagebreak
+\item Choose the critical values $\{c_1 ,c_2, \ldots, ,c_K\}$.
+\item Preserve the overall type I error rate.
+\item Stop the trial early if there is a treatment difference.
+\item Minimize the expected sample size under both $H_0$ and $H_A$.
+\item In the standard GST, no early stopping for futility.
+
+\eit
+
+
+\end{ftab}
+
+
+\begin{fis}{Choosing Critical Values}
+\bit
+\item Haybittle (1971):
+\bit
+\item Choose $c_1 = c_2, \ldots = c_{K-1} = 3.0$.
+\item Solve and Find $C_K$.
+\eit
+\item Peto (1976):
+\bit
+\item Choose $c_1 = c_2 = \ldots = c_{K-1} = Z_{1-0.001}$.
+\item Solve and Find $C_K$.
+\eit
+\item Pocock (1977):
+\bit
+\item Choose $c_1 = c_2 = \ldots = c_{K}$.
+\eit
+\item O'Brian and Fleming (1979):
+\bit
+\item Choose $c_1 > c_2 > \ldots > c_{K}$.
+\eit
+
+
+\eit
+
+\end{fis}
+
+
+
+
+\begin{fis}{Pocock (1977): Choosing Critical Values}
+\bit
+\item Used the same boundary value $c_P$ at each look
+\item Reject $H_0$ the first time when
+\bee
+&& \,\vert\, Z_k \,\vert\, \ge c_P \\
+\text{equivalently} && \,\vert\, S_k \,\vert\, \ge c_P \sqrt{k}.
+\eee
+
+
+\eit
+
+\end{fis}
+
+\begin{fis}{O'Brian and Fleming (1979): \\ Choosing Critical Values}
+\bit
+\item Use larger boundary values $c_B$ at earlier looks.
+\item It is hard to reject $H_0$ early in the study.
+\item Reject $H_0$ the first time when
+\bee
+&& \,\vert\, Z_k \,\vert\, \ge c_B \sqrt{(K/k)} \\
+\text{equivalently} && \,\vert\, S_k \,\vert\, \ge c_B \sqrt{k}.
+\eee
+
+
+\eit
+
+\end{fis}
+
+
+
+
+
+
+\begin{fis}{Most Commonly Used Error Boundaries}
+\bit
+\item Pocock (1977) Biometrika 64, 191-199.
+\bit
+\item Divide type 1 error evenly across number of analyses.
+\item Good opportunity for early stopping.
+\eit
+
+\item O'Brien-Fleming (1979) Biometrics 35, 549-556.
+\bit
+\item Use up very little error at early looks and more error at later looks.
+\eit
+
+\item Fleming-Harrington-O'Brien (1984) \\
+Controlled Clinical Trials 5, 348-361.
+\bit
+\item Similar to OF above, but less conservative.
+\eit
+
+\eit
+
+\end{fis}
+
+
+
+\begin{fis}{}
+   \includegraphics[height=0.8\textheight, width=0.8\textwidth]{X:/xtemp/CT_GST_3}
+
+\end{fis}
+
+
+
+\begin{fis}{GST: Stopping Boundary}
+\bit
+\item 4 Looks, $\alpha = 0.05$, Two-sided Rule
+
+\vspace*{0.3cm}
+%\begin{center}
+\begin{footnotesize}
+%\begin{scriptsize}
+\begin{tabular}{cd{1.2}d{1.3}d{1.2}d{1.3}d{1.2}d{1.3}}
+\toprule
+		&\mc{2}{Pocock}	  &\mc{2}{Haybittle}	& \mc{2}{O'B-F} \\ \cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+   Look      &\mcc{CV}     & \mcc{$\alpha^\star}	& \mcc{CV}	& \mcc{P}	& \mcc{CV} & \mcc{$\alpha^\star$}         \\ \hline
+      1		&2.36 	&.016	&3.29	&.001	&4.08	&.000005    \\
+      2		&2.36	&.016	&3.29	&.001	&3.22	&.0013       \\
+      3		&2.36	&.016	&3.29	&.001	&2.28	&.0228       \\
+      4		&2.36	&.016	&1.96	&.047	&2.04	&.0417       \\
+\bottomrule
+\end{tabular}
+%\end{scriptsize}
+\end{footnotesize}
+%\end{center}
+\vspace*{0.3cm}
+
+
+\eit
+
+\end{fis}
+
+
+
+
+
+\begin{fis}{Choosing a Rule}
+\bit
+\item Pocock rules are rarely used.
+\bit
+\item Too sensitive early when power is poor.
+\item They are inefficient.
+\item Can result in awkward situation \\
+when at the final look of the study, \\
+nominal p-value is less than 0.05,\\
+but is not sufficiently small to achieve significance.
+\item Requires largest sample size to achieve specified power.
+\eit
+
+\item Both O'Brien-Fleming and Haybittle rules are used.
+\bit
+\item The former is preferable for a genuine interest in early stopping.
+\item The latter if the major concerns are ethical.
+\eit
+
+
+\eit
+
+\end{fis}
+
+
+
+\begin{fis}{Limitation of Fixed Boundaries}
+\bit
+\item Number of interim tests is specified in advance.
+\item Equal number of individuals enrolled
+between interim analyses (not realistic).
+\item Many DSMC reviews are based on calendar time and not accrual.
+\item The rigid design limits the possible adjustments during the trial.
+\item Solution: $\alpha$-spending function approach (Lan and DeMets).
+
+\eit
+
+\end{fis}
+
+
+
+\begin{fis}{GST: Flexible Approaches}
+\bit
+\item Slud and Wei (JASA, 1982)
+\bit
+\item Specify exit probabilities for each look (stage).
+\item They sum to $\alpha$.
+\item The prob of exiting the $k$th stage is \\
+the joint probability of not exiting the 1st $k-1$ stages \\
+and exiting the $k$th one.
+\eit
+
+\item Lan-DeMets (Biometrika, 1983)
+\bit
+\item Specify a use function or type I error spending function.
+\item At time zero, $\alpha = 0$.
+\item At full information $\alpha = 0.05$.
+\eit
+
+\eit
+
+\end{fis}
+
+
+
+
+
+\begin{fis}{GST: $\alpha$-Spending Function}
+\bit
+\item Lan and DeMets, Biometrika, 1983;70:659-663. \\
+Discrete sequential boundaries for clinical trials. \\
+
+\item ``Spending the alpha''.
+
+\item Basic concept:
+\bit
+\item The Type 1 error is spent on a function.
+\item Depend on the past and current analysis times.
+\item Not depend on the future or the total number of analyses.
+\eit
+
+\eit
+
+\end{fis}
+
+
+
+\begin{fis}{$\alpha$-Spending Function: Information}
+\bit
+\item Total Information and Information Fraction.
+\item Calendar time $t$ and information fraction at time $t^\star$.
+\bit
+\item The total information = participants at the planned end.
+\item Information fraction $t^\star$ at a articular calendar time $t$:
+\item (Binary):
+\bee
+t^\star \approx \frac{n}{\text{\# total}}.
+\eee
+\item (Survival):
+\bee
+t^\star \approx \frac{\text{\# observed events}}{\text{\# total expected events}}.
+\eee
+\eit
+
+\eit
+
+
+
+\end{fis}
+
+
+
+
+\begin{fis}{Alpha Spending Designs}
+\bit
+\item Allow interim analyses at uneven intervals.
+\item Test statistic can be based on different group sizes.
+\item $Z_1, Z_2, \ldots, Z_K$.
+\item Use the joint distribution to develop stopping rules \\
+for specified but unequal group sizes.
+
+\item Stopping boundaries as continuous function of accrual.
+\item Do not need to have equal spacing.
+\item Do not need to specify when or how many will occur.
+
+\eit
+
+\end{fis}
+
+
+
+\begin{ftab}{Alpha Spending Function}
+    \includegraphics[height=0.8\textheight, width=0.9\textwidth]{X:/xtemp/CT_AlphaSpending01}
+
+\pagebreak
+    \includegraphics[height=0.8\textheight, width=0.9\textwidth]{X:/xtemp/CT_AlphaSpending02}
+
+
+\end{ftab}
+
+
+
+
+\begin{fis}{Alpha Spending Function}
+\bit
+\item $\alpha(t^\star)$: Alpha Spending Function
+\bit
+\item Defines Type I error rate is used.
+\item $t^\star$ is cumulative information fraction at time $t^\star$ \\
+by calendar time $t$.
+\item $0 < t^\star < 1$.
+\eit
+
+\item $\alpha (t^\star)$ increasing.
+\item $\alpha (0) = 0$.
+\item $\alpha (1) = 0.05$. 
+
+\eit
+
+\end{fis}
+
+
+%\begin{fis}{Alpha Spending Function}
+%\bee
+%\alpha_1(t^\star) &=& 2 - 2 \Phi \Big( Z_{1-\frac{\alpha}{2}}/t^\star \Big) \; \text{O'Brien-Fleming} \\
+%\alpha_2(t^\star) &=& \alpha \times \ln \Big(1+(e-1)t^\star \Big) \; \text{Pocock} \\
+%\alpha_3(t^\star) &=& \alpha \times (t^{\star})^{\theta}\; \theta > 0.
+%\eit
+%
+%\end{fis}
+
+
+
+\begin{fis}{}
+\bit
+\item one-sided $\alpha = 0.025$.
+\item $K=4$ analyses at 25\%, 50\%, 75\% and 100\% of fraction information.
+
+\includegraphics[height=0.8\textheight, width=0.9\textwidth]{X:/xtemp/CT_P_OB}
+
+
+\eit
+
+\end{fis}
+
+
+
+\begin{fis}{}
+\bit
+\item Flexible alpha-spending function at any information fraction.
+
+\includegraphics[height=0.8\textheight, width=0.9\textwidth]{X:/xtemp/CT_P_OB01}
+
+\eit
+
+\end{fis}
+
+
+
+\begin{fis}{}
+\bit
+\item Approximate O'Brien Fleming Using Lan-DeMets Spending.
+\item Overall $\alpha = 0.05$ and $K=4$ Looks.
+
+\vspace*{0.3cm}
+%\begin{center}
+\begin{footnotesize}
+%\begin{scriptsize}
+\begin{tabular}{ccc}
+\toprule
+Interim &O'Brien-Fleming& Lan-DeMets        \\
+Analysis &Analysis       & $\alpha$-spending \\ \hline
+1	&4.05		&4.33    \\
+2	&2.86		&2.96    \\
+3	&2.34		&2.36    \\
+4	&2.02		&2.01    \\
+\bottomrule
+\end{tabular}
+%\end{scriptsize}
+\end{footnotesize}
+%\end{center}
+\vspace*{0.3cm}
+
+\eit
+
+\end{fis}
+
+
+
+\begin{ftab}{Beta-blocker Hear Attack Trial (BHAT)}
+\bit
+\item Preliminary Report. JAMA 246:2073-2074, 1981.
+\item Final Report. JAMA 247:1707-1714, 1982.
+\item Double-blind Randomized Controlled Trial.
+\item 3,837 patients, 30-69 years of age, 5-21 days post-MI.
+\item Propranolol vs. placebo-controlled.
+\item Recruitment began in June 1978, planned termination June 1982.
+\item Average of 3 years of follow-up and maximum of 4 years.
+\item Primary endpoint: all-cause mortality.
+\item Event target: 629 deaths.
+\item Stopped early in October 1981.
+
+\pagebreak
+
+\includegraphics[height=0.8\textheight, width=0.9\textwidth]{X:/xtemp/CT_BHAT_KM}
+
+\pagebreak
+
+
+\vspace*{0.3cm}
+%\begin{center}
+\begin{footnotesize}
+%\begin{scriptsize}
+\begin{tabular}{ccccc}
+\toprule
+Look    &Monitoring    &  Months        &Cumulative     &Log-Rank      \\
+Number  &Date          &  Since Start   &Death          &Statistic $Z$ \\ \hline
+1	&May 1979      &11 (.23)	&56 (.09)	&1.68    \\
+2	&Oct 1979      &16 (.33)	&77 (.12)	&2.24    \\
+3	&Mar 1980      &21 (.44)	&126 (.20)	&2.37    \\
+4	&Oct 1980      &28 (.58)	&177 (.28)	&2.30    \\
+5	&Apr 1981      &34 (.71)	&247 (.39) 	&2.34    \\
+6	&Oct 1981      &40 (.83)	&318 (.1)	&2.82    \\
+\bottomrule
+\end{tabular}
+%\end{scriptsize}
+\end{footnotesize}
+%\end{center}
+\vspace*{0.3cm}
+
+
+\pagebreak
+
+
+\vspace*{0.3cm}
+%\begin{center}
+\begin{footnotesize}
+%\begin{scriptsize}
+\begin{tabular}{ccc}
+\toprule
+         &\mc{2}{Lan-DeMets} \\
+Look     & 7 looks & 10 looks \\ \hline
+1	&8.00  &8.00    \\
+2	&8.00  &8.00    \\
+3	&4.86  &4.86    \\
+4	&4.08  &4.08    \\
+5	&3.41  &3.41    \\
+6	&2.95  &2.95    \\
+7	&1.97  &2.58    \\
+8	&      &2.41    \\
+9	&      &2.26    \\
+10	&      &2.06    \\
+\bottomrule
+\end{tabular}
+%\end{scriptsize}
+\end{footnotesize}
+%\end{center}
+\vspace*{0.3cm}
+
+
+\pagebreak
+
+\includegraphics[height=0.8\textheight, width=0.9\textwidth]{X:/xtemp/CT_BHAT_GST}
+
+
+\eit
+
+\end{ftab}
+
+
+
+\begin{fis}{It Is Not Always So Easy!}
+\bit
+\item Physician's Health Study
+\item Should we stop earlier based on the 2nd variable?
+
+\vspace*{0.3cm}
+%\begin{center}
+%\begin{footnotesize}
+\begin{scriptsize}
+\begin{tabular}{ccccccc}
+\toprule
+                &\mc{6}{\# Events} \\ \cmidrule(lr){2-7}
+        Data    &\mc{3}{Death}         &\mc{3}{Fatal/Non-fatal}   \\ \cmidrule(lr){2-4} \cmidrule(lr){5-7}
+  DSMB Review   &Aspirin &Placebo &p-value &Aspirin &Placebo    &p-value  \\ \hline
+    7-1986	&28 	 &33 	  &.52     &75	    &122	&.0007    \\
+  	1-1987	&37	 &42	  &.57	   &89	    &154	&$<$ .0001   \\
+	12-1987	&44	 &44	  &.99	   &104	    &189	&$<$ .0001   \\
+\bottomrule
+\end{tabular}
+\end{scriptsize}
+%\end{footnotesize}
+%\end{center}
+\vspace*{0.3cm}
+
+\eit
+
+{\footnotesize
+(Cairns et al.  Annals Epid  1:395-405, 1991.)
+}
+
+\end{fis}
+
+
+
+\begin{fis}{It Is Not Always So Easy!}
+\bit
+\item VIGOR Study
+
+\vspace*{0.3cm}
+%\begin{center}
+\begin{footnotesize}
+%\begin{scriptsize}
+\begin{tabular}{lcccccc}
+\toprule
+                &Rofecoxib  &Naproxen   & P-value    \\ \hline
+Upper GI        &56         &121        & $<$ 0.001    \\
+Complicated UGI &16         & 37        & 0.005      \\
+Death           &22 (0.5\%) & 15 (0.4\%)&            \\
+CVD Death       & 7 (0.2\%) &  7 (0.2\%)&            \\
+Acute MI        &20 (0.4\%) &  4 (0.1\%)&            \\
+Total \#        &4,047      &  4,029    &            \\
+\bottomrule
+\end{tabular}
+%\end{scriptsize}
+\end{footnotesize}
+%\end{center}
+\vspace*{0.3cm}
+
+
+\eit
+
+\end{fis}
+
+
+
+
+\begin{fis}{The need for Judgment}
+\bit
+\item Statistical considerations alone are inadequate.
+\item Statistical algorithms cannot account for all possible developments.
+\item Exercise of clinical judgement is essential.
+\bit
+\item balancing of safety and efficacy outcomes
+\item consideration of unanticipated outcomes
+\item consideration of new information external to trial
+\eit
+
+\eit
+
+\end{fis}
+
+
+
+
+\begin{fis}{Software for GST}
+\bit
+\item SAS, PROC SEQDESIGN, PROC SEQTEST
+\item R, gsDesign package, taskview.
+\eit
+
+\end{fis}
+
+
+
+%%%%%%%%%%%%%%%%%
+\section[Asymmetric Group Sequential Boundary (GSB) and Futility]{Asymmetric Group Sequential Boundary (GSB) and Futility}
+
+\begin{fis}{AsymmetricGroup Sequential Boundary (GSB) \\ and Futility}
+
+\end{fis}
+
+
+
+\begin{fis}{Futility}
+\bit
+\item A trial not being able to meet its primary objective:
+\bit
+\item Benefit
+\item Effect in either direction
+\item Non-inferiority
+\eit
+\item May also involve other secondary objectives.
+
+\eit
+
+\end{fis}
+
+
+
+\begin{fis}{Symmetric or Asymmetric GSB}
+\bit
+\item For two existing or alternative treatments
+\bit
+\item Symmetric GSBs
+\item Level of evidence same in either direction
+\eit
+\item For a new treatment vs. standard of care
+\bit
+\item Asymmetric GSBs
+\item Level of evidence less for negative (harmful) trends
+than for positive (beneficial) trends
+\eit
+\item If new treatment not proven but already in practice, \\
+may require more symmetric GSBs than asymmetric GSBs.
+\item Need convincing evidence to discourage or stop a practice.
+
+
+\eit
+
+{\footnotesize
+(DeMets, Pocock \& Julian, Lancet, 1999.)
+}
+
+
+\end{fis}
+
+
+\begin{fis}{Asymmetric GSBs for Harm}
+\bit
+\item One simple approach: \\
+set the lower boundary at an arbitrary value.
+\item Such as $Z$ = -1.5 or $Z$ = -2.0.
+
+\eit
+
+\end{fis}
+
+
+
+\begin{fis}{Asymmetric GSBs for Harm}
+\bit
+\item MERIT-HF used a modified Haybittle-Peto boundary for benefit.
+\item Use asymmetric boundary $Z$ = -2.5 for harm.
+
+\includegraphics[height=0.8\textheight, width=0.9\textwidth]{X:/xtemp/CT_GSB_AsymB02}
+
+\eit
+
+\end{fis}
+
+
+
+\begin{fis}{Negative Trends}
+\bit
+\item Trends are variable, especially early.
+\item Different trend patterns.
+\bit
+\item Settle down on no difference.
+\item Reverse to become beneficial (positive).
+\item Drift downwards to demonstrate harm.
+\item Plunge towards harm.
+\eit
+
+\eit
+
+\end{fis}
+
+
+
+
+\begin{fis}{Asymmetric GSBs Futility}
+
+    \includegraphics[height=0.8\textheight, width=0.9\textwidth]{X:/xtemp/CT_GSB_Asym01}
+
+\end{fis}
+
+
+
+\begin{fis}{Examples: Negative Trend}
+\bit
+\item Inotropic drugs for chronic heart failure
+\bit
+\item Milrinone/PROMISE
+\item Vesnarinone/VEST
+\eit
+\item Anti-arrhythmic drugs for cardiac arrhythmia patients / CAST
+\item Hormone replacement therapy (HRT) \\
+ Womens Health Initiative (WHI) \& HERS
+\item Coumadin vs Aspirin/ CARS
+\item Atenolol vs Placebo in MI / ISIS-I
+
+
+\eit
+
+\end{fis}
+
+
+
+\begin{fis}{Methods for Assessing Negative Trends}
+\bit
+\item Harm
+\bit
+\item Symmetric group sequential boundaries
+\item Asymmetric group sequential boundaries
+\eit
+\item Futility
+\bit
+\item Beta Spending Functions
+\item SPRT/Triangular Boundaries
+\item Conditional Power
+\item Predictive Power (Bayesian)
+\eit
+
+\eit
+
+\end{fis}
+
+
+
+\begin{ftab}{PROMISE}
+\bit
+\item Prospective Randomized Milrinone Survival Evaluation (PROMISE)
+\item Class III and IV congestive heart failure patients.
+\item Test Milrinone to reduce mortality.
+\item Randomized, double-blind, placebo controlled.
+\item Outcome: all mortality
+
+\pagebreak
+\item 1,088 patients randomized (561 M, 527 P)
+\item Median follow-up 6 months (0, 20 months)
+\item 90\% compliance
+\item None lost to follow-up
+\item DSMB stopped PROMISE 5 months early
+\bit
+\item 168 deaths on Milrinone (30\%)
+\item 127 deaths on placebo (24\%)
+\item 95\% deaths cardiovascular
+\eit
+
+
+\pagebreak
+\item Survival Curves for the PROMISE Trial
+
+    \includegraphics[height=0.73\textheight, width=0.9\textwidth]{X:/xtemp/CT_PROMIS_Surv}
+
+
+\pagebreak
+\item PROMISE: asymmetric group sequential boundaries
+   \includegraphics[height=0.73\textheight, width=0.9\textwidth]{X:/xtemp/CT_PROMIS_Surv2}
+
+
+
+\pagebreak
+\item Agonizing negative trend.
+\item Issue of symmetric vs. asymmetric GSB.
+\item PROMISE crossed zone of futility.
+\item Milrinone approved for IF use for high risk patients.
+\item Milrinone improved cardiac function.
+\item Needed to rule out neutrality	from harm on mortality.
+
+\pagebreak
+\item PROMISE: asymmetric group sequential boundaries for futility
+   \includegraphics[height=0.70\textheight, width=0.9\textwidth]{X:/xtemp/CT_PROMIS_Surv3}
+
+\eit
+\vspace*{-0.5cm}
+{\footnotesize
+(New England Journal of Medicine, 1991.)
+}
+
+\end{ftab}
+
+
+
+\begin{fis}{Asymmetric Boundaries}
+\bit
+\item Most trials want to show superiority of the new tx.
+\item Keep the upper stopping boundary.
+\item Set the lower boundary to an arbitrary value, $Z_k$ = -1.5 or $Z_k$ = -2.
+\item If new tx shows a strong, \\
+but non-significant harmful effect, \\
+one may wants to stop the trial.
+\item Extension: curtailed sampling procedures.
+
+\eit
+
+\end{fis}
+
+%%%%%%%%%%%%%%%%%%%%%
+\section[Curtailed Sampling and Conditional Power]{Curtailed Sampling and Conditional Power}
+
+\begin{fis}{Curtailed Sampling Procedures}
+\bit
+\item Conditional Power = Curtailed Sampling Procedures
+\item Compute $P(\text{reject $H_0$ given data so far})$
+\item Deterministic Curtailed Sampling.
+\bit
+\item assume all future outcomes in treated.
+\item assume all future outcomes in placebo.
+\eit
+
+\item Stochastic Curtailed Sampling.
+\bit
+\item assume $H_0$ true.
+\item assume $H_A$ true.
+\item assume same as the past is true.
+\eit
+
+\eit
+
+\end{fis}
+
+
+
+\begin{fis}{Stochastic Curtailment and Conditional Power}
+    \includegraphics[height=0.8\textheight, width=0.9\textwidth]{X:/xtemp/CT_Curtail01}
+
+
+\end{fis}
+
+
+
+\begin{fis}{Conditional Power}
+\bit
+\item Conditional Power = Curtailed Sampling Procedures
+\item Conditional power can be useful to assess \\
+the likelihood of a positive result becoming neutral/negative.
+\item Most useful for futility.
+\item Likelihood of a negative or neutral trend reversing.
+
+
+\eit
+
+\end{fis}
+
+
+
+
+\begin{ftab}{It Is Not Always So Easy!}
+\bit
+\item Physician's Health Study
+\item Subjects: 22,071 physicians
+\item Interventions:
+\bit
+\item aspirin 325 mg QOD
+\item beta-carotene 50 mg QOD
+\eit
+
+\item Follow-up: 5 of planned 7 years
+\item Outcomes:
+\bit
+\item primary = CVD death
+\item secondary = MI, stroke
+\eit
+
+\pagebreak
+\item Should we stop earlier based on the 2nd variable?
+
+\vspace*{0.3cm}
+%\begin{center}
+%\begin{footnotesize}
+\begin{scriptsize}
+\begin{tabular}{ccccccc}
+\toprule
+                &\mc{6}{\# Events} \\ \cmidrule(lr){2-7}
+        Data    &\mc{3}{Death}         &\mc{3}{Fatal/Non-fatal}   \\ \cmidrule(lr){2-4} \cmidrule(lr){5-7}
+  DSMB Review   &Aspirin &Placebo &p-value &Aspirin &Placebo    &p-value  \\ \hline
+    7-1986	&28 	 &33 	  &.52     &75	    &122	&.0007    \\
+  	1-1987	&37	 &42	  &.57	   &89	    &154	&$<$ .0001   \\
+	12-1987	&44	 &44	  &.99	   &104	    &189	&$<$ .0001   \\
+\bottomrule
+\end{tabular}
+\end{scriptsize}
+%\end{footnotesize}
+%\end{center}
+\vspace*{0.3cm}
+
+\pagebreak
+
+\item Should we stop earlier based on the 2nd variable?
+
+
+\vspace*{0.3cm}
+%\begin{center}
+\begin{footnotesize}
+%\begin{scriptsize}
+\begin{tabular}{ld{3.0}d{3.0}cd{1.2}}
+\toprule
+Outcome	   &\mcc{Aspirin} &\mcc{Placebo} &RR	&\mcc{p-value} \\ \hline
+CVD death  & 81		&  83		&1.0	&.87      \\
+MI	   &139		&239		&0.6	&.00001   \\
+Stroke (total)	   &119		&  98		&1.2	&.15      \\
+Stroke  ischemic & 91	        &   82		&1.1	&.50      \\
+Stroke  hemorrhage  & 23		&  12		&2.1	&.06      \\
+\bottomrule
+\end{tabular}
+%\end{scriptsize}
+\end{footnotesize}
+%\end{center}
+\vspace*{0.3cm}
+
+\pagebreak
+\item CVD death rate was 50\% of planned.
+\item No chance to see benefit even if alternative hypothesis true.
+
+\item ASA had already been proven to reduce risk for recurrent MI.
+
+\item Effect on MI was strong.
+\item Physician cross-over to ASA becoming a big problem.
+
+
+\eit
+
+{\footnotesize
+(Cairns et al.  Annals Epid  1:395-405, 1991.)
+}
+
+\end{ftab}
+
+
+
+
+\begin{ftab}{Coronary Arrhythmia Suppression Trial}
+\bit
+\item 1,727 of planned 4400 subjects after MI.
+\item Flecainide, encainide or moricizine vs. placebo.
+\item Mean follow-up 1 year of planned 5 years.
+\item Outcomes: mortality from arrhythmia, total mortality.
+
+
+\pagebreak
+
+\item This unexpected harmful effect occurred early, very dramatic.
+\item The most difficult situation is where negative trends slowly.
+
+
+
+\vspace*{0.3cm}
+%\begin{center}
+\begin{footnotesize}
+%\begin{scriptsize}
+\begin{tabular}{ld{3.0}d{3.0}d{1.3}}
+\toprule
+Outcome			&\mcc{F/E}	&\mcc{Placebo}	&\mcc{p-value}  \\ \hline
+N randomized		&730		&725            &       \\
+Arrhythmic death	&33		&  9		&.0006  \\
+Total death		&56	   	& 22		&.0003  \\
+\bottomrule
+\end{tabular}
+%\end{scriptsize}
+\end{footnotesize}
+%\end{center}
+\vspace*{0.3cm}
+
+
+\eit
+
+\end{ftab}
+
+
+\begin{fis}{Early Stopping for Benefit}
+\bit
+\item How long does benefit last?
+\item Does benefit strengthen over time?
+\item Does treatment reduce mortality?
+\item Do findings support 5 years of treatment?
+\item Were side effects underestimated?
+\item How will other trials be altered?
+
+\eit
+
+\end{fis}
+
+
+
+\begin{fis}{Group Sequential Design: Summary}
+\bit
+\item Ethical reasons:
+\bit
+\item superiority or inferiority of a treatment
+\item toxicity
+\eit
+\item Efficiency and economical reasons:	
+\bit
+\item quality control
+\item savings in money, time, biological samples, ...
+\item screening of new hypotheses
+\eit
+
+\eit
+
+\end{fis}
+
+
+
+\begin{fis}{Interim Monitoring and Analysis}
+\bit
+\item Interim monitoring very important.
+\item Should be planned in advance.
+\item Should be performed well.
+\item Any change in protocol should be carefully considered.
+
+\eit
+
+\end{fis}
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%
+\begin{ftab}{}
+
+\LARGE
+\center
+Thanks!
+
+
+\end{ftab}
+
+
+
+
+\end{document}
+
+
+
+
+
+
+
+\begin{fis}{}
+\bit
+\item
+
+\eit
+
+\end{fis}
+
+
+
+\begin{fis}{}
+\bit
+\item
+
+\eit
+
+\end{fis}
+
+
+
+\begin{fis}{}
+\bit
+\item
+
+\eit
+
+\end{fis}
+
+
+
+\begin{fis}{}
+\bit
+\item
+
+\eit
+
+\end{fis}

@@ -1,0 +1,472 @@
+﻿
+\input{20160130CTCwTexBeamerChineseUTF8NoTitle}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[數據安全監督委員會]% (optional, use only with long paper titles)
+{{\sf CT 016:} {\ctxff 數據安全監督委員會}}
+
+\subtitle{{\large\sf Data and Safety Monitoring Boards (DSMB)} \\
+{\large\sf Data Monitoring Committee (DMC)}} % (optional)
+
+
+
+\author[林建甫] % (optional, use only with lots of authors)
+    {{\large\ctxff 林 建 甫} \\ }
+% - Use the \inst{?} command only if the authors have different
+%   affiliation.
+
+\institute[NTPU] % (optional, but mostly needed)
+{
+  %\inst{1}%
+  {\ctxff \footnotesize 台北大學 統計系} \\
+  %{\ctxff 台北醫學大學萬芳醫院 骨科} \\
+  %{\ctxff 台北大學 統計系 醫學統計學程 助理教授} \\
+  %{\ctxff 亞洲環宇醫學編譯公司 統計顧問} \\
+  %{\ctxff 智策市場研究公司 統計顧問} \\
+  %{\ctxff 台北市 台安醫院 骨科兼任主治醫師} \\
+  %{\ctxff 台北市 中山醫院 骨科兼任主治醫師} \\
+  %{\ctxff 美國 密西根大學 生物統計博士}
+  %Department of Statistics\\
+  %National Taipei University, Taipei, Taiwan
+  %%\and
+  %%\inst{2}%
+  %%Department of Theoretical Philosophy\\
+  %%University of Elsewhere
+}
+% - Use the \inst command only if there are several affiliations.
+% - Keep it simple, no one is interested in your street address.
+
+
+\date[\myyear] % (optional, should be abbreviation of conference name)
+{{\footnotesize \myyear}}
+% - Either use conference name or its abbreviation.
+% - Not really informative to the audience, more for people (including
+%   yourself) who are reading the slides online
+
+\subject{臨床試驗}
+% This is only inserted into the PDF information catalog. Can be left
+% out.
+
+% If you have a file called "university-logo-filename.xxx", where xxx
+% is a graphic format that can be processed by latex or pdflatex,
+% resp., then you can add a logo as follows:
+
+% \pgfdeclareimage[height=0.5cm]{university-logo}{university-logo-filename}
+% \logo{\pgfuseimage{university-logo}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\ctxff
+
+\begin{fis}{}
+  \titlepage
+\end{fis}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{fis}{Fundamental Point}
+\bit
+\item During the trial,
+response variables need to be monitored for early dramatic
+benefits or potential harmful effects or futility.
+\item Monitoring should be done by a person or group \\
+independent of the investigator.
+\eit
+
+\end{fis}
+
+
+\begin{ftab}{試驗數據監督與期中分析}
+\bit
+\item Clinical Trials: 投資新藥 = 賭博
+\item A Clinical Trial: 2000-2005
+\item Fixed Sample Size.
+\item 試驗期中則多看幾次 (光明正大的偷看)!
+\item 2001Jan, 2001Jul, 2002Jan, 2002Jul, ....
+% CP  (Conditional Power)
+
+\pagebreak
+\item  數據監督與期中分析 = 根據現有數據, 判定最後新藥有效的可能性
+\bit
+\item 很高: 早點停? 但還沒有到最後結果?
+\item 不是很高:  但多加點受試者就有希望, 將賭注作大?
+\item 很低: 早點停? 能省就省!
+\item 新藥有害:早點停! 不然惹上官司,  只能吃公家飯!
+\eit
+
+\item 提早停認輸, OK!
+\item 提早停說贏, 就沒那麼簡單!
+
+\eit
+
+\end{ftab}
+
+\begin{fis}{Monitoring Committee Acronyms}
+\bit
+\item PAB = Policy Advisory Board
+\item DSMB = Data and Safety Monitoring Board
+\item DMC = Data Monitoring Committee
+\item ESMB = Efficacy and Safety Monitoring Board
+\item OSMB = Observational Study Monitoring
+
+\eit
+
+\end{fis}
+
+
+
+
+\begin{fis}{試驗期中多看幾次, 有什麼不好?}
+\bit
+\item 多看多錯? 會!
+\item 多看多對? 會!
+\item Why? (吵過架的人都知道)
+\bit
+\item 吵前架的前提不同 (有效 vs. 有害)
+\item 看的人立場不同 (法規單位 vs. 藥廠)
+\item 有時還會看到不該看到的事情!
+\eit
+
+
+\eit
+
+\end{fis}
+
+
+\begin{fis}{誰負責期中多看幾次?}
+\bit
+\item DSMB (Data Safety \& Monitoring Board)
+\item DMC (Data Monitoring Committee)
+\eit
+$\blacktriangleright$ 如何進行 Interim Analysis?
+
+
+\end{fis}
+
+
+\begin{fis}{藥品優良臨床試驗準則}
+\bit
+\item 第三八條 監測 (Monitoring):
+監督臨床試驗進度與確保臨床試驗有依照臨床試驗計畫書,
+標準作業程序,
+藥品優良臨床試驗規範與相關法令規定之行為.
+
+\item 第六條 稽核 (Audit):
+有系統且獨立地檢視臨床試驗相關活動與文件,
+以決定臨床試驗相關活動的進行,
+數據記錄,
+分析與報告是否均依照試驗計畫書,
+試驗委託者的標準作業程序,
+藥品優良試驗規範與相關法規的要求.
+
+\item 第二九條 查核 (Inspection):
+主管機關正式檢閱其認為與臨床試驗相關的檔案,
+設備, 紀錄.
+
+
+\eit
+
+\end{fis}
+
+
+\begin{fis}{藥品優良臨床試驗準則}
+第二一五條 試驗監測的目的為確證：
+\bit
+\item (一) 受試者之權利及福祉受到保護.
+\item (二) 所報告的試驗數據準確, 完整且可自原始資料中查證.
+\item (三) 試驗的執行符合已核准試驗計畫書及其修正書,
+藥品優良臨床試驗規範, 及相關法規要求.
+\eit
+
+
+\end{fis}
+
+
+\begin{fis}{Why Have Monitoring Plans?}
+\bit
+\item Patient Safety \\
+Required by NIH (National Institutes of Health)
+and NCRR (National Center for Research Resources)
+
+
+\eit
+
+\end{fis}
+
+
+\begin{fis}{Monitoring Response Variables}
+\bit
+\item Ethical Responsibility: \\
+safety and benefit be monitored during the trial.
+\bit
+\item If harmful, early termination.
+\item If clear benefit from the intervention, stopped early.
+\item If responses are so unimpressive, justify to stop or continue?
+\eit
+\item Identify the need to collect additional data.
+\item Reveal problems or issue involving poor data quality.
+
+\eit
+
+\end{fis}
+
+
+\begin{fis}{Data Monitoring Committee}
+\bit
+\item A data monitoring committee is a group of experts \\
+that reviews the ongoing conduct of a clinical trial to \\
+ensure continuing patient safety as well as the validity and \\
+scientific merit of the trial.
+
+\eit
+
+\end{fis}
+
+
+\begin{fis}{}
+    \includegraphics[height=0.8\textheight, width=0.9\textwidth]{X:/xtemp/CT_DSMB_Org}
+
+
+\end{fis}
+
+
+\begin{fis}{ICH E9 Sec. 4.6}
+\bit
+\item IDMC evaluates interim data, \\
+makes recommendations to sponsor.
+\item IDMC should have written operating procedures and \\
+maintain meeting records.
+\item Independence maintains confidentiality of interim data and \\
+protects integrity of trial.
+\item Role of any sponsor representatives must be clearly defined; \\
+dissemination of interim results within sponsoring organization must be controlled.
+
+\eit
+
+\end{fis}
+
+
+\begin{fis}{When is an Independent DSMB Needed?}
+ICH E9, Section 4.5.
+\bit
+\item Early phase studies:
+\bit
+\item Monitoring usually at local level.
+\item Independent DMC not usually needed.
+\eit
+
+\item Phase III \& IV studies:
+\bit
+\item Morbidity/mortality irreversible outcomes.
+\item Pivotal phase III trial.
+\eit
+
+\item Frail populations, e.g., children, elderly.
+\item Substantial uncertainty about safety, e.g., gene therapy.
+\eit
+
+
+\end{fis}
+
+
+
+
+\begin{fis}{Data Monitoring Committee}
+\bit
+\item Scientific
+\item Ethical
+\item Economic
+\item Data monitoring is not a simply statistical issue.
+\item An active process:
+
+\bit
+\item additional tabulations.
+\item analysis.
+\item ongoing review.
+\eit
+
+\eit
+
+\end{fis}
+
+
+
+
+\begin{fis}{藥品優良臨床試驗準則}
+第二一六條: 監測者之選擇及其資格
+\bit
+\item (一) 監測者應由試驗委託者指派.
+\item (二) 監測者應有適當的訓練,
+且應有足以適當監測試驗的科學及/或臨床知識.
+監測者的資格應有文件證明.
+\item (三) 監測者應通曉研究藥品, 試驗計畫書,
+書面受試者同意書及其他給受試者的書面資料,
+試驗委託者的標準作業程序,
+藥品優良臨床試驗規範,
+和相關法規要求.
+\eit
+
+
+\end{fis}
+
+
+\begin{fis}{Membership of DSMC}
+\bit
+\item Generally 3-10 members
+\item Clinical medicine (appropriate specialty)
+\item Biostatistics
+\item Biomedical ethics
+\item Basic science/pharmacology
+\item Epidemiology
+\item Clinical trial methodology
+\item Law
+\item Patient advocate/community representative
+\item No member associated with trial
+\eit
+
+
+
+\end{fis}
+
+
+\begin{fis}{Membership: Conflicts of Interest}
+\bit
+\item Financial involvement
+%with product being studies
+%with completing product
+\item Patient involvement
+%entering patients on study
+%treating study patients
+%evaluating patient outcomes
+\item Intellectual involvement
+%prepared protocol
+%involved in earlier development of product
+%regulatory involvement
+
+\eit
+
+\end{fis}
+
+
+\begin{fis}{Independent DMC}
+\bit
+\item Objectivity of decision-making: early stop.
+%early stopping
+%interim changes in protocol
+\item Conduct of study.  %Not affected by interim data analysis
+\bit
+\item rate of accrual
+\item types of patients entered
+\item dropouts/compliance
+\eit
+\item Reduced risk of confidentiality violations.
+
+
+\eit
+
+\end{fis}
+
+
+\begin{fis}{DMC Recommendations}
+\bit
+\item Continue Trial (unmodified protocol)
+\item Modify Protocol
+\item Terminate Trial
+
+\eit
+
+\end{fis}
+
+
+\begin{fis}{DMC Meeting Structure}
+    \includegraphics[height=0.8\textheight, width=0.9\textwidth]{X:/xtemp/CT_DMC_Section}
+
+\end{fis}
+
+
+
+
+\begin{fis}{Open and Close Section}
+\bit
+\item Open Statistical Report
+\bit
+\item Findings for all treatment groups combination.
+\eit
+
+\item Closed Statistical Report
+\bit
+\item Detailed statistical commentary explaining issues.
+\item Compliance, Adverse Effects, Baseline Comparisons, \\
+Treatment Effect
+\item Closed report figures and tables \\
+(by coded treatment group, with codes given to DSMB members)
+\eit
+
+\eit
+
+\end{fis}
+
+
+
+\begin{fis}{FDA and DMC}
+\bit
+\item FDA will not tell sponsors whether to follow DMC recommendations.
+
+\item FDA may be consulted regarding specific regulatory issues.
+
+
+\eit
+
+\end{fis}
+
+
+
+\begin{fis}{Decision for Early Termination}
+Four major reasons:
+\bit
+\item Serious adverse effects.
+\item Greater-than-expected beneficial effects.
+\item Significant difference by the end is improbable.
+\item Logistical or data-quality problems be so severe.
+
+\eit
+
+\end{fis}
+
+
+
+\begin{fis}{Data Monitoring Summary}
+\bit
+\item DMC is useful to assess risk/benefit.
+\item Treatment effect trends emerge with variability over time.
+\item Statistical methods available to minimize false positive claims.
+\item No single method adequate.
+
+
+\eit
+
+\end{fis}
+
+
+
+%%%%%%%%%%%%%%%%%%%%
+\begin{ftab}{}
+
+\LARGE
+\center
+Thanks!
+
+
+\end{ftab}
+
+
+
+
+\end{document}
