@@ -1,0 +1,1103 @@
+%% SET INCLUDE PATH or PUT FIGURE FILES IN THE SAME FOLDER
+%%%% WORK !!!!!!!!!!!!!!
+  %%%%% LAST SLIDE MOTION USE ACROBAT 才能 作用
+%% SET INCLUDE PATH or PUT FIGURE FILES IN THE SAME FOLDER
+%%%%注意文本保存的格式為UTF-8.
+
+\documentclass[11pt,compress]{beamer} 
+
+% BIG 5 標點符號無法 spell check
+% OK 8, 9, 10, 11, 12, 14, 17, 20 
+% 17pt =: 32pt, 14 pt =: 28pt
+%\documentclass[12pt, handout]{beamer} %OK
+%\documentclass[12pt,handout]{beamer} %NOT WORK
+%\documentclass[11pt, compress, envcountsect]{beamer} % NOT WORK use pdflatex
+%[compress, envcountsect] % NOT WORK
+
+%\input{X:/AAAClass/2008RBook/2017RPPT/20170701RPPTKniterBeamerHead}
+%\input{X:/AAAClass/2016DM/2017DMLatex/2017DMPPTHead/20170801DMPPTKniterBeamerHead}
+
+%\input{X:/AAAClass/2016DM/2017DMLatex/2017DMPPTHead/20170901RPPTKniterBeamerHead}
+
+\input{X:/AAAClass/2016DM/2017DMLatex/201701FDMHW/20170901DMPPTKniterBeamerHead}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<<SetPackageEvalOn, tidy=TRUE, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE, small.mar=TRUE>>=
+library(knitr)
+# global chunk options
+opts_chunk$set(autodep=TRUE)
+knit_hooks$set(small.mar = function(before, options, envir) {
+    if (before) par(mar = c(2, 2, 2, 2)) 
+})
+opts_chunk$set(fig.align='center',fig.show='hold',size='tiny', small.mar=TRUE)
+require(markdown)
+require(pander)
+require(formatR)
+require(highlight)
+require(xtable)
+require(ggplot2)
+@
+ 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[第一期臨床試驗]% (optional, use only with long paper titles)
+{{\ctxff CT 31 第一期臨床試驗} \\
+{\sf Phase One Design}}
+
+\subtitle{{\large\ctxff 臨床試驗: 設計與分析} \\
+{\sf Clinical Trials: Design and Alaysis}} % (optional)
+% Book: 2017 Hadley Wickham and Garrett Grolemund, R for Data Science
+% Chap 2, 4, ... Workflow Run Script
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+\ctxff
+
+\begin{fis}{}
+  \titlepage
+\end{fis}
+
+%%  
+%% 20170901_AAA_R_InstallPackage.r
+<<, tidy=FALSE, eval=TRUE, echo=FALSE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.8\\textheight", out.width="1.0\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE>>=
+library(tidyverse)
+library(nycflights13)
+library(gapminder)
+library(Lahman)
+library(stringr)
+library(microbenchmark)
+library(forcats)
+library(lubridate)
+library(magrittr)
+library(dplyr)
+library(purrr)
+library(modelr)
+options(na.action = na.warn)
+@
+
+
+%%%%%%%%%%%%
+\section[Traditional 3+3 Design]{Traditional 3+3 Design}
+
+
+\begin{fis}{Operating Characteristic Analysis}
+\bit
+\item Monte Carlo Method
+\item $C$: MTD
+\item $P(C)$: P(dose $C$ is found to be MTD)
+\item Estimate $P(C)$
+\item Confirm: $P(C) < 33\%$ 
+\item Hope: $P(C)$ is close to 33\%
+\item 3+3 with $k$ dose levels, must specify $k$ probabilities 
+\bee
+\pi = P(\text{Toxicity} \,\vert\, d_i), i= 1, 2, \ldots, k.
+\eee
+\item An OC is conditional on particular truth
+\eit
+
+\end{fis}
+
+
+\begin{ftab}{Traditional 3+3 Design: Simulation}
+\bit
+\item $M$ = 1000 simulations
+\item $c_m$ = indicator as RP2D in each $M$
+\bee
+\widehat{P}(C) \approx \sum_{m=1}^{M} \frac{c_m}{M}.
+\eee
+\item Suppose two dose levels, with $\pi_1=0.1$ and $\pi_2=0.25$.
+\eit
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.8\\textheight", out.width="1.0\\textwidth", small.mar=TRUE, warning=FALSE>>=
+set.seed(1234);
+nsim = 1000;
+true_prob = c(0.1, 0.25)
+cohort1a = rbinom(nsim, 3, true_prob[1])
+cohort1b = rbinom(nsim, 3, true_prob[1])
+cohort2a = rbinom(nsim, 3, true_prob[2])
+cohort2b = rbinom(nsim, 3, true_prob[2])
+@
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.8\\textheight", out.width="1.0\\textwidth", small.mar=TRUE, warning=FALSE>>=
+# Recommend dose 1 as MTD
+mean((cohort1a == 0 | (cohort1a + cohort1b <= 1)) 
+     & (cohort2a + cohort2b > 1))
+@
+
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.8\\textheight", out.width="1.0\\textwidth", small.mar=TRUE, warning=FALSE>>=
+# Recommend dose 2 as MTD
+mean((cohort1a == 0 | (cohort1a + cohort1b <= 1)) 
+     & (cohort2a + cohort2b  <= 1))
+@
+
+
+
+
+\end{ftab}
+
+
+
+\begin{fis}{Question}
+\bquiz
+\equiz
+\bit
+\item Replace the random seed with your ID.
+\item Suppose 3 dose levels, 
+$\pi_1=0.1$, $\pi_2=0.25$ and $\pi_3=0.4$.
+\item Report the simulation-based OC correspondng to each $\pi$.
+\eit
+
+
+\end{fis}
+
+
+
+\begin{ftab}{Biased Coin Design: Simulation}
+
+
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+sm_biasedcoin = function(true_probs,
+                          start = 1, 
+                          q_esc = 1,
+                          n = 20, 
+                          nsim = 100, 
+                          seed=sample(.Machine$integer.max, 1)) {
+# Put code in here 
+}
+@
+
+
+\end{ftab}
+
+
+
+%%%%%%%%%%
+\section[Modified Toxicity Probability Interval (MTPI)]{Modified Toxicity Probability Interval (MTPI)}
+
+
+\begin{ftab}{MTPI: Simulation}
+\bit
+\item $\pi_1, \pi_2, \ldots, \pi_k$: parameters
+\item $p(\pi)$: conjugate prior with $\dis{Beta}(a_1, a_2)$ distribution
+\item $L(\pmb{y} \,\vert\, \pi)$: likelihood for binomial distribution
+\item $p(\pi \,\vert\, \pmb{y})$: posterior with $\dis{Beta}(a_1+y, a_2+(n-y))$
+\item $\err$: equivalence interval around target 
+
+
+\pagebreak
+\item Beta is a conjugate prior
+\item Start with $a_1+a_2$ effective subjects
+\bit
+\item $a_1$ DLTs 
+\item $a_2$ non-DLTs
+\eit
+\item Distribution of each $\pi_j$ remains Beta \\
+after (real) data are collected (independent across $j$)
+\item For each dose level $j$, need only \\
+number of DLTs ($y_j$) and non-DLTs ($n_j-y_j$)
+\item $\err$: equivalence interval around target 
+
+\eit
+
+\end{ftab}
+
+\begin{ftab}{}
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+mtpi_decision = function(y, 
+                         n, 
+                         target = 0.30, # DLT rate
+                         epsilon = 0.05, # equivalence interval around target 
+                         prior_shape1 = 0.5, # a1
+                         prior_shape2 = 0.5) # a2
+{
+  post_shape1 = y + prior_shape1
+  post_shape2 = n - y + prior_shape2
+  E = pbeta(target - epsilon, post_shape1, post_shape2) / 
+    (target - epsilon)
+  S = (pbeta(target + epsilon, post_shape1, post_shape2) -
+         pbeta(target - epsilon, post_shape1, post_shape2)) / 
+    (2 * epsilon)
+  D = pbeta(target + epsilon, post_shape1, post_shape2, lower.tail = F) /  
+    (1 - target - epsilon)
+  c(E = E, S = S, D = D)
+}
+@
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+mtpi_decision(0, 2)
+
+mtpi_decision(1, 2)
+
+mtpi_decision(1, 6)
+@
+
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+mtpi_decision(1, 7)
+
+mtpi_decision(2, 7)
+
+mtpi_decision(2, 2)
+@
+
+\pagebreak
+\bit
+\item Data are shared within a dose level but not between.
+\item After $n_1=6$ patients at dose level 1, $y_1=1$ DLT, \\
+and MTPI says to escalate to dose level 2 for patient 7
+\item After DLT / no DLT is observed for patient 7, \\
+$p((\pi_2 \,\vert\, \pmb{y}) = \dis{Beta}(\pi_2 \,\vert\, y_2+a_1, 1−y_2+a_2)$,
+where $y_2=0$ or $y_2=1$
+\item No knowledge used about 1/6 DLT rate at dose level 1.
+
+\eit
+
+
+\end{ftab}
+
+
+
+\begin{ftab}{Behavior Can be Completely Pre-specified}
+
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+n = 20; target = 0.30; epsilon = 0.05; shape_both = 0.5;
+recommendations = unacceptable = 
+  matrix(NA, n+1, n, dimnames = list(0:(n), 1:n));
+for(i in 1:n) {
+  recommendations[1:(i+1), i] =  
+    c("E","S","D")[apply(matrix(mtpi_decision(0:i, i, 
+                                              target = target, 
+                                              epsilon = epsilon,
+                                              prior_shape1 = shape_both,
+                                              prior_shape2 = shape_both),
+                                nrow = i+1), 1, which.max)];
+  unacceptable[1:(i+1), i] = 
+    pbeta(target + epsilon, 
+          shape_both + (0:i), 
+          shape_both + i - (0:i), 
+          lower.tail = F) > 0.95;
+}
+@
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+plot_code = function() {
+  par(mar = c(5, 4, 0, 2), oma = c(0, 0.1, 0, 0.1), las = 1);
+  plot.new(); plot.window(xlim = c(1, n), c(0, n));
+  axis(1, at = 1:n);
+  axis(2, at = 0:n, las = 2); axis(4, at = 0:n, las = 2);
+  for(i in 1:n) {
+    if(i%%2) segments(0, i, i-0.1, i, lty = 2, lwd = 2, col = "grey50");
+    text(recommendations[1:(i+1), i], x = i, y = 0:i, 
+         col = ifelse(recommendations[1:(i+1), i] == "E", "#377EB8",
+                      ifelse(recommendations[1:(i+1),i] == "S", "#4DAF4A",
+                             "#E41A1C")));
+    text("X", x = i, y = which(unacceptable[1:(i+1), i]) - 1, 
+         col = "black");
+  }
+  mtext(expression(n[j]), side = 1, line = 3, cex = 1.5);
+  mtext(expression(y[j]), side = 2, line = 3, cex = 1.5);
+  }
+@
+
+
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+plot_code()
+@
+\end{ftab}
+
+
+\begin{ftab}{Sample from Posterior and Enforce Montonicity}
+
+
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+# (Gelfand, Smith and Lee, 1992)
+
+mu_draws = cbind(rbeta(1e6, 3+shape_both, 5+shape_both),
+                 rbeta(1e6, 1+shape_both, 3+shape_both),
+                 rbeta(1e6, 4+shape_both, 4+shape_both));
+satisfied = which((mu_draws[, 1] < mu_draws[, 2]) 
+                  & (mu_draws[, 2] < mu_draws[, 3]));
+mu_draws_mono = mu_draws[satisfied, ];
+nrow(mu_draws_mono) / nrow(mu_draws); # proportion of draws retained
+@
+\end{ftab}
+
+
+
+\begin{ftab}{Unconstrained Posterior}
+$\blacktriangleright$ $p(\pi \,\vert\, \pmb{y})$
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+# posterior mean (closer to target is better)
+colMeans(mu_draws);
+
+
+# posterior pr(mu_j > p_t) (smaller is better)
+colMeans(mu_draws > target);
+
+# posterior pr(p_t - eps < mu_j < p_t + eps) (larger is better)
+colMeans((mu_draws > target - epsilon) * ((mu_draws < target + epsilon)));
+@
+\end{ftab}
+
+
+
+\begin{ftab}{Constrained Posterior}
+$\blacktriangleright$ $p(\pi \,\vert\, \pmb{y}, \pi_1 < \pi_2 < \pi_3)$
+
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+# posterior mean given monotonicity
+colMeans(mu_draws_mono);
+
+# posterior pr(mu_j > p_t) given monotonicity
+colMeans(mu_draws_mono > target);
+
+# posterior pr(p_t - eps < mu_j < p_t + eps) given monotonicity
+colMeans((mu_draws_mono > target - epsilon) * 
+           ((mu_draws_mono < target + epsilon)));
+@
+\end{ftab}
+
+
+
+\begin{ftab}{UnConstrained vs Constrained Posterior}
+
+
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+library(ggplot2)
+ggplot() + 
+  geom_density(data = data.frame(mu_draws), aes(x = X2), 
+               fill = "orange", color = "orange", alpha = 0.2) +
+  geom_density(data = data.frame(mu_draws_mono), aes(x = X2), 
+               fill = "red", color = "red", alpha = 0.5) +
+  xlim(0, 1)
+@
+\end{ftab}
+
+
+
+\begin{ftab}{UnConstrained Posterior}
+
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+# Unconstrained Posterior
+library(ggplot2)
+ggplot(data = data.frame(mu_draws[1:1e5, ])) +
+  lims(x = c(0, 1), y = c(0, 1)) +
+  stat_density_2d(aes(x = X1, y = X2, fill = ..level..), 
+                  geom = "polygon")
+@
+\end{ftab}
+
+
+
+\begin{ftab}{Constrained Posterior}
+
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+# Constrained Posterior
+library(ggplot2)
+ggplot(data = data.frame(mu_draws_mono[1:1e5, ])) +
+  lims(x = c(0, 1), y = c(0,1)) +
+  stat_density_2d(aes(x = X1, y = X2, fill = ..level..), 
+                  geom = "polygon")
+@
+@
+\end{ftab}
+
+
+
+%%%%%%%%%
+\section[CRM Simulation]{CRM Simulation}
+
+\begin{ftab}{}
+
+
+
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+antic = c(12,16,22,30,40,52)/100 # prior skeleton
+truth1 = c(2,12,20,23,26,30)/100 # True curve 
+truth2 = c(12,16,22,30,40,52)/100 + 0.10 # True curve 
+
+library(dfcrm)
+set.seed(1234)
+sim1 = titesim(
+  PI = truth1, # True curve 
+  prior = antic, # skeleton
+  x0 = 2, # starting dose level
+  n = 30, # sample size
+  target = 0.30, # target rate of DLT
+  nsim = 100, # number of simulated trials
+  count = F, # Don't display progress of simulations
+    restrict = T, # place restrictions on dose escalation
+    scale = 1) # sd of normal prior on beta
+@
+
+\pagebreak
+<<, tidy=FALSE, eval=FALSE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+sim1
+@
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=FALSE, results='markup', size='tiny', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+sim1
+@
+
+
+
+
+\end{ftab}
+
+
+%%%%%%%%%%%%%
+\section[TITE-CRM Simulation]{TITE-CRM Simulation}
+
+
+\begin{fis}{TITE-CRM implemented \\
+in \pco{dfcrm} package (Cheung, 2013)}
+\bit
+\item function \fco{titesim()}
+\item Different choices for $w$
+\item Simulate arrival process of patients
+\item Calculate estimated trial duration
+
+\eit
+
+\end{fis}
+
+
+
+
+\begin{ftab}{}
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+# 3 subjects for > 1 cycle 
+## each at dose level 3 free of DLT (001-003)
+# 1 subject at dose level 4 with DLT (004)
+# 1 subject at dose level 4 without DLT (005)
+# 1 subject at dose level 4 without DLT for 9/21 days 
+## (dropped due to progression) (006)
+# 1 subject enrolled to dose level 5, never received drug (007)
+# 1 sujbect enrolled to dose level 5 without DLT for 7/21 days 
+## (dropped due to progression) (008)
+# 1 subject enrolled to dose level 5 without DLT (009)
+@
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+# Data
+tox_dat = c(0,0,0,1,0,0,0,0,0)
+level = c(3,3,3,4,4,4,5,5,5)
+n = length(tox_dat)
+weights = c(1,1,1,1,1,9/21,0,7/21,1)
+
+library(dfcrm)
+set.seed(1234)
+sim2 = titecrm(prior = c(2,5,10,15,20,30,40,45)/100,
+               target = 0.30,
+               tox = tox_dat,
+               level = level,
+               weights = weights,
+               method = "bayes",
+               model = "logistic",
+               intcpt = 0,
+               scale = sqrt(1.34))
+@
+
+\pagebreak
+<<, tidy=FALSE, eval=FALSE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+sim2
+@
+
+
+
+
+\pagebreak
+\begin{lstlisting}[language=R]
+DATA SUMMARY (TITE-CRM) 
+PID 	 Level 	 Toxicity 	 f/u 	 Weight 	 Included 
+1 	 3 	 0 		 N/A 	 1 		 1 
+2 	 3 	 0 		 N/A 	 1 		 1 
+3 	 3 	 0 		 N/A 	 1 		 1 
+4 	 4 	 1 		 N/A 	 1 		 1 
+5 	 4 	 0 		 N/A 	 1 		 1 
+6 	 4 	 0 		 N/A 	 0.429 		 1 
+7 	 5 	 0 		 N/A 	 0 		 1 
+8 	 5 	 0 		 N/A 	 0.333 		 1 
+9 	 5 	 0 		 N/A 	 1 		 1 
+\end{lstlisting}
+
+
+
+\pagebreak
+\begin{lstlisting}[language=R]
+Toxicity probability update (with 90 percent probability interval): 
+Level 	 Prior 	 n 	 total.wts 	 total.tox 	 Ptox 	 LoLmt 	 UpLmt 
+1 	 0.02 	 0 	 0 		 0 		 0.048 	 0 	 0.274 
+2 	 0.05 	 0 	 0 		 0 		 0.095 	 0.001 	 0.324 
+3 	 0.1 	 3 	 3 		 0 		 0.156 	 0.006 	 0.366 
+4 	 0.15 	 3 	 2.429 		 1 		 0.209 	 0.017 	 0.393 
+5 	 0.2 	 3 	 1.333 		 0 		 0.257 	 0.037 	 0.414 
+6 	 0.3 	 0 	 0 		 0 		 0.343 	 0.12 	 0.447 
+7 	 0.4 	 0 	 0 		 0 		 0.423 	 0.278 	 0.475 
+8 	 0.45 	 0 	 0 		 0 		 0.462 	 0.384 	 0.487 
+Next recommended dose level: 6 
+Recommendation is based on a target toxicity probability of 0.3 
+\end{lstlisting}
+
+
+
+
+\pagebreak
+\begin{lstlisting}[language=R]
+Estimation details:
+Logistic dose-toxicity model: 
+p = {1 + exp(-a-exp(beta)*dose)}^{-1} with a = 0 
+dose = -3.892 -2.944 -2.197 -1.735 -1.386 -0.847 -0.405 -0.201 
+Normal prior on beta with mean 0 and variance 1.34 
+Posterior mean of beta: -0.265 
+Posterior variance of beta: 0.464 
+\end{lstlisting}
+\end{ftab}
+
+
+
+
+%%%%%%%%%%%%
+\section[Phase II Sample Size]{Phase II Sample Size}
+
+
+
+
+\begin{fis}{Phase II with Single Arm: \\
+Normal-based Sample Size}
+\bit
+\item $H_0: \pi = \pi_0$ versus $H_A: \pi = \pi_1$.
+\item Effect size: $\delta = \pi_1 - \pi_0$.
+\item $n$: sample size.
+\bee
+n = \frac{\Big(Z_{1-{\alpha}} \sqrt{\pi_0(1-\pi_0)}
++ Z_{1-\beta} \sqrt{\pi_1(1-\pi_1)} \Big)^2}{(\pi_1-\pi_0)^2}.
+\eee
+
+\eit
+\end{fis}
+
+
+
+\begin{ftab}{}
+
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+# Phase II + Single Arm
+simp_sampsize = function(p0, p1, 
+                         alpha = 0.05, beta = 0.20) {
+  ceiling((qnorm(1 - alpha) * sqrt(p0*(1 - p0)) + 
+             qnorm(1 - beta) * sqrt(p1*(1 - p1)))^2 /
+            (p1 - p0)^2)
+}
+
+x = matrix(mapply(simp_sampsize, 
+                  p0 = rep((1:6)/10, each = 6), 
+                  p1 = rep((2:7)/10, times = 6)),
+           nrow = 6,
+           byrow = T,
+           dimnames = list((1:6)/10, (2:7)/10))
+@
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='tiny', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+x
+@
+
+
+\pagebreak
+\bit
+\item $\pi_0$: rows
+\item $\pi_1$: columns
+\item $\alpha=0.05$ and $\beta=0.20$
+\item $n \propto (\pi_0 - \pi_1)^2$
+\item Infeasible to test for improvement of 0.1 or less
+\eit
+
+
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+# po = 0.2, p1 = 0.35
+# alpha = 0.05, beta = 0.20
+# n = 50, r = 15
+# rejiect when R > 15
+# calculate type I error
+pbinom(15, 50, 0.20, lower = F) # type I error
+pbinom(15, 50, 0.35, lower = F) # power = 1 - type I error
+@
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+# calculate exact one-sided CI
+binom.test(15, 50, p = 0.20, 
+           alternative = "greater", conf.level = 0.95)
+@
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='footnotesize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+# calculate exact two-sided CI
+binom.test(15, 50, p = 0.20, 
+           alternative = "two.sided", conf.level = 0.90)
+@
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='tiny', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+# calculate approximate two-sided CI
+prop.test(15, 50, p = 0.20, 
+           alternative = "two.sided", conf.level = 0.90)
+@
+\end{ftab}
+
+
+\begin{fis}{Comparison of One-stage, Modified Gehan Designs}
+\bit
+\item One stage
+\item Continue to phase 3 if $R>r$ responses out of $n$ patients
+\eit
+
+\end{fis}
+
+
+\begin{ftab}{}
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+n = 50; r = 14;
+p0 = 0.20; p1 = 0.35;
+
+# Type I error = P (R > r | \pi = p0)
+pbinom(q = r, size = n, prob = p0, lower.tail = F)
+
+# Power = P (R > r | \pi = p1)
+pbinom(q = r, size = n, prob = p1, lower.tail = F)
+@
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+# Modified Gehan designs
+n1 = 7; n = 50; r = 14
+p0 = 0.20; p1 = 0.35
+
+(summand1 = pbinom(r - (1:n1), n - n1, p0, lower.tail = F));
+
+(summand2 = dbinom(1:n1, n1, p0));
+
+# Type I error
+sum(summand1 * summand2);
+
+# Power
+sum(pbinom(r - (1:n1), n - n1, p1, lower.tail = F) * 
+      dbinom(1:n1, n1, p1))
+@
+
+\end{ftab}
+
+
+
+%%%%%%%%%%%%%%%
+\section[Simon's two-Stage Design]{Simon's two-Stage Design}
+
+
+\begin{fis}{Simon's two-Stage Design}
+\bit
+\item Implemented in \pco{clinfun} package (Seshan, 2015)
+\eit
+
+\end{fis}
+
+
+
+
+
+\begin{ftab}{}
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+library(clinfun);
+ph2simon(pu = 0.20, pa = 0.35, ep1 = 0.05, ep2 = 0.20);
+@
+
+\pagebreak
+\bit
+\item Compared to one-stage design ($n=50$; $r=14$), \\
+there is cost in terms of numbers of subjects.
+\eit
+
+\end{ftab}
+
+
+
+
+\begin{fis}{Implemented in \pco{ph2mult} package \\
+(Zhu and Qin, 2016)}
+
+\end{fis}
+
+
+
+\begin{ftab}{}
+
+
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.95\\textheight", out.width="0.95\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+library(ph2mult)
+par(mar = c(4, 4, 3, 1))
+binom.design(type = "admissible", p0 = 0.20, p1 = 0.35, 
+             signif.level = 0.05, power.level = 0.8, plot.out = T)
+@
+\end{ftab}
+
+
+\begin{fis}{Inference depends on design}
+\end{fis}
+
+\begin{ftab}{}
+
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+# Inference depends on design: Ex 1
+r1 = 6; n1 = 31; R = 15; n = 53; 
+p0 = 0.20
+sum(pbinom(R - ((r1+1):n1), n - n1, p0, lower.tail = F) *
+                dbinom((r1+1):n1, n1, p0))
+@
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+# Inference depends on design: Ex 2
+# Design 1
+pbinom(7, 25, 0.2, lower.tail = F) # 1-binomial CDF
+@
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+# Inference depends on design: Ex 2
+# Design 2
+pnbinom(7, 17, 1-0.2, lower.tail = F) # 1 - neg-binom CDF 
+@
+\end{ftab}
+
+
+%%%%%%%%%%%%
+\section[Sample Size Time to Event]{Sample Size Time to Event}
+
+
+\begin{ftab}{Sample Size Time to Event}
+
+\end{ftab}
+
+
+\begin{ftab}{}
+
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+set.seed(1234)
+lambda = 0.025
+base_draws = matrix(rexp(100 * 1e4), nrow = 1e4)
+nsamp = 5
+library(ggplot2)
+ggplot() + 
+  geom_histogram(aes(
+    x = ( 1/rowMeans(base_draws[ ,1:nsamp,drop=F]/lambda) - lambda) / 
+      (lambda / sqrt(nsamp)),
+    y = ..density..),
+    bins=30) + 
+  stat_function(aes(x = c(-2,2)), fun = dnorm, n = 301, 
+                args = list(mean = 0, sd = 1)) + 
+  theme(text = element_text(size = 14)) + 
+  labs(x = "n = 5", y = "")
+@
+
+\pagebreak
+\bit
+\item try $n=50$ and $n=100$.
+
+\eit
+
+\end{ftab}
+
+
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{fis}{}
+
+\LARGE
+\center
+Thanks!
+
+
+\end{fis}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+
+\begin{lstlisting}[language=R]
+
+\end{lstlisting}
+
+\begin{fis}{}       
+\begin{figure}[htbp] \centering
+    \includegraphics[height=0.80\textheight, width=1.0\textwidth]{X:/xtemp/}
+    %\includegraphics[height=0.3\textheight]{}
+    %\includegraphics[height=3.2in, width=0.9\textwidth]{}
+    %\includegraphics[height=3in, width=4in]{}
+    \figcaption{}
+  \label{fig:r4dsc0901}
+\end{figure}
+\end{fis}
+
+
+\begin{fis}{}
+\bit
+\item 
+
+\eit
+
+\end{fis}
+
+
+\begin{ftab}{}
+\bit
+\item
+\eit
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.8\\textheight", out.width="1.0\\textwidth", small.mar=TRUE, warning=FALSE>>=
+
+@
+
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+@
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+@
+
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+@
+
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+@
+
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+@
+
+
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+@
+
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+@
+
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+@
+
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+@
+
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+@
+
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+@
+
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+
+@
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+@
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+@
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+@
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+@
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.9\\textheight", out.width="0.9\\textwidth", small.mar=TRUE, warning=FALSE, message=FALSE, fig.keep='all'>>=
+@
+
+
+\pagebreak
+
+
+\end{ftab}
+ 
+
+\begin{fver}{}
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.8\\textheight", out.width="1.0\\textwidth", small.mar=TRUE, warning=FALSE>>=
+
+@
+\end{fver}
+
+
+
+\begin{fver}{}
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.8\\textheight", out.width="1.0\\textwidth", small.mar=TRUE, warning=FALSE>>=
+
+@
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.8\\textheight", out.width="1.0\\textwidth", small.mar=TRUE, warning=FALSE>>=
+
+@
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.8\\textheight", out.width="1.0\\textwidth", small.mar=TRUE, warning=FALSE>>=
+
+@
+
+\end{fver}
+
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.8\\textheight", out.width="1.0\\textwidth", small.mar=TRUE, warning=FALSE>>=
+
+@
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.8\\textheight", out.width="1.0\\textwidth", small.mar=TRUE, warning=FALSE>>=
+
+@
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.8\\textheight", out.width="1.0\\textwidth", small.mar=TRUE, warning=FALSE>>=
+
+@
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.8\\textheight", out.width="1.0\\textwidth", small.mar=TRUE, warning=FALSE>>=
+
+@
+
+
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.8\\textheight", out.width="1.0\\textwidth", small.mar=TRUE, warning=FALSE>>=
+
+@
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.8\\textheight", out.width="1.0\\textwidth", small.mar=TRUE, warning=FALSE>>=
+
+@
+
+
+
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.8\\textheight", out.width="1.0\\textwidth", small.mar=TRUE, warning=FALSE>>=
+
+@
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.8\\textheight", out.width="1.0\\textwidth", small.mar=TRUE, warning=FALSE>>=
+
+@
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.8\\textheight", out.width="1.0\\textwidth", small.mar=TRUE, warning=FALSE>>=
+
+@
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.8\\textheight", out.width="1.0\\textwidth", small.mar=TRUE, warning=FALSE>>=
+
+@
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.8\\textheight", out.width="1.0\\textwidth", small.mar=TRUE, warning=FALSE>>=
+
+@
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.8\\textheight", out.width="1.0\\textwidth", small.mar=TRUE, warning=FALSE>>=
+
+@
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.8\\textheight", out.width="1.0\\textwidth", small.mar=TRUE, warning=FALSE>>=
+
+@
+
+
+
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.8\\textheight", out.width="1.0\\textwidth", small.mar=TRUE, warning=FALSE>>=
+
+@
+
+\pagebreak
+<<, tidy=FALSE, eval=TRUE, echo=TRUE, results='markup', size='scriptsize', autodep=TRUE, dependson=c(-1, -2, -3), fig.height=4, fig.width=5.5, out.height="0.8\\textheight", out.width="1.0\\textwidth", small.mar=TRUE, warning=FALSE>>=
+
+@
+
